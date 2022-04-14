@@ -82,29 +82,29 @@ Sub Furikae_Mobile()
 
         Select Case tam
             Case "03"
-                tac = ss.Columns(2)
+                tac = 2
             Case "04"
-                tac = ss.Columns(3)
+                tac = 3
             Case "05"
-                tac = ss.Columns(4)
+                tac = 4
             Case "06"
-                tac = ss.Columns(5)
+                tac = 5
             Case "07"
-                tac = ss.Columns(6)
+                tac = 6
             Case "08"
-                tac = ss.Columns(7)
+                tac = 7
             Case "09"
-                tac = ss.Columns(8)
+                tac = 8
             Case "10"
-                tac = ss.Columns(9)
+                tac = 9
             Case "11"
-                tac = ss.Columns(10)
+                tac = 10
             Case "12"
-                tac = ss.Columns(11)
+                tac = 11
             Case "01"
-                tac = ss.Columns(12)
+                tac = 12
             Case "02"
-                tac = ss.Columns(13)
+                tac = 13
             Case Else
                 MsgBox "ちょっと待ちんさい"
                 End
@@ -114,34 +114,39 @@ Sub Furikae_Mobile()
         de = Cells(Rows.Count, "D").End(xlUp).Row
         Dim j
         Dim zeinuki_total As Long: zeinuki_total = 0
-        Dim hikazei_total As Long: zeinuki_total = 0
+        Dim hikazei_total As Long: hikazei_taial = 0
 
         For j = HEADER_ROW To de
-            If Not Cells(j, 4) = "小計" And Not Cells(j, 6) = "対象外" Then
-                zeinuki_total = zeinuki_total + Cells(j, 5)
-            ElseIf Not Cells(j, 4) = "小計" And Cells(j, 6) = "対象外" Then
+            If Cells(j, 6) = "対象外" Then
                 hikazei_total = hikazei_total + Cells(j, 5)
+            ElseIf Not Cells(j, 4) = "小計" Then
+                zeinuki_total = zeinuki_total + Cells(j, 5)
             End If
         Next
 
         ' Summaryに書こう
-        Debug.Print department_name
-        Debug.Print zeinuki_total
-        Debug.Print hikazei_total
-        
+
         Dim p As Integer
         For p = 5 To 18
-            If Cells(p, 1) = department_name Then
-                Cells(p, tac) = zeinuki_total
+            If ss.Cells(p, 1) = department_name Then
+                ss.Cells(p, tac) = zeinuki_total
+                GoTo continue1
             End If
         Next
-
+continue1:
         Dim q As Integer
         For q = 39 To 52
-            If Cells(q, 1) = department_name Then
-                Cells(q, tac) = hikazei_total
+            If ss.Cells(q, 1) = department_name Then
+                ss.Cells(q, tac) = hikazei_total
+                GoTo continue2
             End If
         Next
+continue2:
+        ' 合計金額を書く
+        Range("F5").Formula = "=summary!B" & p & " + summary!B" & q
+
+        hikazei_total = 0
+        zeinuki_total = 0
 
     Next file
 
@@ -150,7 +155,6 @@ Sub Furikae_Mobile()
 
 
 End Sub
-
 
 ' Sheets に指定した名前のシートが存在するか判定する
 Public Function ExistsSheet(ByVal bookName As String)
