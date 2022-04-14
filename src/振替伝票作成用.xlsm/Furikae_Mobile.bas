@@ -28,8 +28,12 @@ Sub Furikae_Mobile()
 
         ' 部署シートに部署Excelの内容を転記
         ' ヘッダカラムが[電話番号, 料金内訳, 内訳金額(円), 税区分]の形になっているので転記
-        ' B列の「合計」以降は不要
-
+        ' B列の「合計」以降は不要のため，「合計」が記載された行数を特定
+        Dim goukei_row As Range
+        With ActiveSheet.UsedRange.Columns(2)
+            Set goukei_row = .Find(What:="合計", LookIn:=xlValues, LookAt:=xlWhole)
+        End With
+        Debug.Print goukei_row.Row
 
         ' 保存せずに閉じる
         Call wb.Close(SaveChanges:=False)
