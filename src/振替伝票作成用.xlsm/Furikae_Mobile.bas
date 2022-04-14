@@ -78,7 +78,7 @@ Sub Furikae_Mobile()
         tam = Format(DateSerial(Year(Now), Month(Now), 0), "mm")
         Dim tac
         Dim ss As Worksheet
-        Set ss = Worksheets(1)
+        Set ss = ThisWorkbook.Worksheets("summary")
 
         Select Case tam
             Case "03"
@@ -117,16 +117,18 @@ Sub Furikae_Mobile()
         Dim hikazei_total As Long: zeinuki_total = 0
 
         For j = HEADER_ROW To de
-            If Not Cells(j, 4) = "小計" Then
-                If Not Cells(j, 6) = "非課税" Then
-                    zeinuki_total = zeinuki_total + Cells(j, 5)
-                Else
-                    hikazei_total = hikazei_total + Cells(j, 5)
-                End If
+            If Not Cells(j, 4) = "小計" And Not Cells(j, 6) = "対象外" Then
+                zeinuki_total = zeinuki_total + Cells(j, 5)
+            ElseIf Not Cells(j, 4) = "小計" And Cells(j, 6) = "対象外" Then
+                hikazei_total = hikazei_total + Cells(j, 5)
             End If
         Next
 
         ' Summaryに書こう
+        Debug.Print department_name
+        Debug.Print zeinuki_total
+        Debug.Print hikazei_total
+        
         Dim p As Integer
         For p = 5 To 18
             If Cells(p, 1) = department_name Then
