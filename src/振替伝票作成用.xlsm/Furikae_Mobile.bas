@@ -74,7 +74,72 @@ Sub Furikae_Mobile()
             End If
         Next
         ' EóÒÇ…ÇƒèWåvçÏã∆
+        Dim tam
+        tam = Format(DateSerial(Year(Now), Month(Now), 0), "mm")
+        Dim tac
+        Dim ss As Worksheet
+        Set ss = Worksheets(1)
 
+        Select Case tam
+            Case "03"
+                tac = ss.Columns(2)
+            Case "04"
+                tac = ss.Columns(3)
+            Case "05"
+                tac = ss.Columns(4)
+            Case "06"
+                tac = ss.Columns(5)
+            Case "07"
+                tac = ss.Columns(6)
+            Case "08"
+                tac = ss.Columns(7)
+            Case "09"
+                tac = ss.Columns(8)
+            Case "10"
+                tac = ss.Columns(9)
+            Case "11"
+                tac = ss.Columns(10)
+            Case "12"
+                tac = ss.Columns(11)
+            Case "01"
+                tac = ss.Columns(12)
+            Case "02"
+                tac = ss.Columns(13)
+            Case Else
+                MsgBox "ÇøÇÂÇ¡Ç∆ë“ÇøÇÒÇ≥Ç¢"
+                End
+        End Select
+
+
+        de = Cells(Rows.Count, "D").End(xlUp).Row
+        Dim j
+        Dim zeinuki_total As Long: zeinuki_total = 0
+        Dim hikazei_total As Long: zeinuki_total = 0
+
+        For j = HEADER_ROW To de
+            If Not Cells(i, 4) = "è¨åv" Then
+                If Not Cells(i, 6) = "îÒâ€ê≈" Then
+                    zeinuki_total = zeinuki_total + Cells(i, 5)
+                Else
+                    hikazei_total = hikazei_total + Cells(i, 5)
+                End If
+            End If
+        Next
+
+        ' SummaryÇ…èëÇ±Ç§
+        Dim p As Integer
+        For p = 5 To 18
+            If Cells(p, 1) = department_name Then
+                Cells(p, tac) = zeinuki_total
+            End If
+        Next
+
+        Dim q As Integer
+        For q = 39 To 52
+            If Cells(q, 1) = department_name Then
+                Cells(q, tac) = hikazei_total
+            End If
+        Next
 
     Next file
 
