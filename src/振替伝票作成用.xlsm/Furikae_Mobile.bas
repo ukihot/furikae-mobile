@@ -4,6 +4,7 @@ Attribute VB_Name = "Furikae_Mobile"
 Sub Furikae_Mobile()
     'お約束
     Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
 
     ' tmpフォルダに格納されているExcelの数が部署の数と一致(Loop)
     ' ./fetch_bill/tmp/${部署名}.xlsxを読む
@@ -21,19 +22,30 @@ Sub Furikae_Mobile()
         Dim department_name As String: department_name = Left(wb.Name, Len(wb.Name) - 5)
 
         ' 部署シートをtemplateシートのコピーとして作成
-        If Not ExistsSheet(department_name) Then
-            ThisWorkbook.Worksheets("template").Copy After:=ThisWorkbook.Worksheets(1)
-            ActiveSheet.Name = department_name
+        If ExistsSheet(department_name) Then
+            ThisWorkbook.Sheets(department_name).Delete
         End If
+        ThisWorkbook.Worksheets("template").Copy After:=ThisWorkbook.Worksheets(1)
+        ActiveSheet.Name = department_name
 
         ' 部署シートに部署Excelの内容を転記
-        ' ヘッダカラムが[電話番号, 料金内訳, 内訳金額(円), 税区分]の形になっているので転記
         ' B列の「合計」以降は不要のため，「合計」が記載された行数を特定
-        Dim goukei_row As Range
-        With ActiveSheet.UsedRange.Columns(2)
-            Set goukei_row = .Find(What:="合計", LookIn:=xlValues, LookAt:=xlWhole)
+
+        With wb.Worksheets(1).Columns("B")
+            ' めんどいのでエラーハンドリングしない
+            Dim goukei_cell As Range
+            Set goukei_cell = .Find(What:="合計", LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows)
         End With
-        Debug.Print goukei_row.Row
+
+        Dim goukei_row
+        goukei_row = goukei_cell.Row
+
+        ' ヘッダカラムが[電話番号, 料金内訳, 内訳金額(円), 税区分]の形になっているので転記
+        ' A2 -> D${goukei_row-1} の範囲をC9にコピー
+        Dim original As Range
+        Dim clone As Range
+        Set original = Range(Cells(2, 1), Cells(goukei_row - 1, 4))
+        Set clone = ThisWorkbook.Worksheets(department_name).Range("C9")
 
         ' 保存せずに閉じる
         Call wb.Close(SaveChanges:=False)
