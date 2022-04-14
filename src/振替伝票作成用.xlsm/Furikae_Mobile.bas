@@ -19,6 +19,9 @@ Sub Furikae_Mobile()
         ' ファイルを開いてブックとして取得
         Dim wb As Workbook
         Set wb = Workbooks.Open(file)
+        Dim ws As Worksheet
+        Set ws = wb.Worksheets(1)
+
         Dim department_name As String: department_name = Left(wb.Name, Len(wb.Name) - 5)
 
         ' 部署シートをtemplateシートのコピーとして作成
@@ -31,11 +34,9 @@ Sub Furikae_Mobile()
         ' 部署シートに部署Excelの内容を転記
         ' B列の「合計」以降は不要のため，「合計」が記載された行数を特定
 
-        With wb.Worksheets(1).Columns("B")
-            ' めんどいのでエラーハンドリングしない
-            Dim goukei_cell As Range
-            Set goukei_cell = .Find(What:="合計", LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows)
-        End With
+        ' めんどいのでエラーハンドリングしない
+        Dim goukei_cell As Range
+        Set goukei_cell = ws.Columns("B").Find(What:="合計", LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows)
 
         Dim goukei_row
         goukei_row = goukei_cell.Row
@@ -44,13 +45,15 @@ Sub Furikae_Mobile()
         ' A2 -> D${goukei_row-1} の範囲をC9にコピー
         Dim original As Range
         Dim clone As Range
-        Set original = Range(Cells(2, 1), Cells(goukei_row - 1, 4))
+        Set original = ws.Range(ws.Cells(2, 1), ws.Cells(goukei_row - 1, 4))
         Set clone = ThisWorkbook.Worksheets(department_name).Range("C9")
+        original.Copy clone
 
         ' 保存せずに閉じる
         Call wb.Close(SaveChanges:=False)
 
     Next file
+    MsgBox "正常に完了しました．"
 
 
 End Sub
