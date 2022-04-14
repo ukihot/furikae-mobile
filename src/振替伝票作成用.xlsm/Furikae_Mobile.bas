@@ -6,6 +6,13 @@ Sub Furikae_Mobile()
     Application.ScreenUpdating = False
     Application.DisplayAlerts = False
     Const HEADER_ROW As String = 8
+    
+    ' 実行確認
+    Dim rc As Long
+    rc = MsgBox(Format(DateSerial(Year(Now), Month(Now), 0), "yyyy/mm") & " の集計を開始しますがよろしいですか？", vbYesNo + vbQuestion)
+    If rc = vbNo Then
+        End
+    End If
 
     ' tmpフォルダに格納されているExcelの数が部署の数と一致(Loop)
     ' ./fetch_bill/tmp/${部署名}.xlsxを読む
@@ -66,11 +73,13 @@ Sub Furikae_Mobile()
                 Cells(i, 2).Formula = "=VLOOKUP(" & Cells(i, 3).Address & ",PHONE_MST!A:B,2,)"
             End If
         Next
-        ' E列にて
+        ' E列にて集計作業
+
 
     Next file
 
     MsgBox "正常に完了しました．"
+    Worksheets(1).Activate
 
 
 End Sub
