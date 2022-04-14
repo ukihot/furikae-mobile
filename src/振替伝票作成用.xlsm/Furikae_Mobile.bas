@@ -117,11 +117,11 @@ Sub Furikae_Mobile()
         Dim hikazei_total As Long: zeinuki_total = 0
 
         For j = HEADER_ROW To de
-            If Not Cells(i, 4) = "è¨åv" Then
-                If Not Cells(i, 6) = "îÒâ€ê≈" Then
-                    zeinuki_total = zeinuki_total + Cells(i, 5)
+            If Not Cells(j, 4) = "è¨åv" Then
+                If Not Cells(j, 6) = "îÒâ€ê≈" Then
+                    zeinuki_total = zeinuki_total + Cells(j, 5)
                 Else
-                    hikazei_total = hikazei_total + Cells(i, 5)
+                    hikazei_total = hikazei_total + Cells(j, 5)
                 End If
             End If
         Next
