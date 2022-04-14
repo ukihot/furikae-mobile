@@ -15,26 +15,27 @@ Set files = fso.GetFolder(tmp_path).files
 
 'フォルダ内の全ファイルについて処理
 For Each file In files
-
-    'ファイルを開いてブックとして取得
+    ' ファイルを開いてブックとして取得
     Dim wb As Workbook
     Set wb = Workbooks.Open(file)
     Dim department_name As String: department_name = Left(wb.Name, Len(wb.Name) - 5)
 
-    ' 部署名シートをtemplateシートのコピーとして作成
+    ' 部署シートをtemplateシートのコピーとして作成
     If Not ExistsSheet(department_name) Then
         ThisWorkbook.Worksheets("template").Copy After:=ThisWorkbook.Worksheets(1)
         ActiveSheet.Name = department_name
     End If
-    '保存せずに閉じる
+
+    ' 部署シートに部署Excelの内容を転記
+    ' ヘッダカラムが[電話番号, 料金内訳, 内訳金額(円), 税区分]の形になっているので転記
+    ' B列の「合計」以降は不要
+
+
+
+    ' 保存せずに閉じる
     Call wb.Close(SaveChanges:=False)
 
 Next file
-
-
-' ヘッダカラムが[電話番号, 料金内訳, 内訳金額(円), 税区分]の形になっているので転記
-
-' B列の「合計」以降は不要
 
 
 End Sub
