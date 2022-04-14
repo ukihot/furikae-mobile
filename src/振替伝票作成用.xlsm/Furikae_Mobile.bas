@@ -19,17 +19,17 @@ For Each file In files
     'ファイルを開いてブックとして取得
     Dim wb As Workbook
     Set wb = Workbooks.Open(file)
+    Dim department_name As String: department_name = Left(wb.Name, Len(wb.Name) - 5)
 
-    'ブックに対する処理
-
+    ' 部署名シートをtemplateシートのコピーとして作成
+    If Not ExistsSheet(department_name) Then
+        ThisWorkbook.Worksheets("template").Copy After:=ThisWorkbook.Worksheets(1)
+        ActiveSheet.Name = department_name
+    End If
     '保存せずに閉じる
     Call wb.Close(SaveChanges:=False)
 
 Next file
-' 部署名シートをtemplateシートのコピーとして作成
-
-
-
 
 
 ' ヘッダカラムが[電話番号, 料金内訳, 内訳金額(円), 税区分]の形になっているので転記
@@ -38,3 +38,19 @@ Next file
 
 
 End Sub
+
+
+' Sheets に指定した名前のシートが存在するか判定する
+Public Function ExistsSheet(ByVal bookName As String)
+    Dim ws As Variant
+    For Each ws In ThisWorkbook.Sheets
+        If LCase(ws.Name) = LCase(bookName) Then
+            ExistsSheet = True ' 存在する
+            Exit Function
+        End If
+    Next
+
+    ' 存在しない
+    ExistsSheet = False
+End Function
+
