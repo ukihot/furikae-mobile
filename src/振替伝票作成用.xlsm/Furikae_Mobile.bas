@@ -46,13 +46,23 @@ Sub Furikae_Mobile()
         Dim original As Range
         Dim clone As Range
         Set original = ws.Range(ws.Cells(2, 1), ws.Cells(goukei_row - 1, 4))
-        Set clone = ThisWorkbook.Worksheets(department_name).Range("C9")
+        Set clone = ThisWorkbook.Worksheets(department_name).Range("C8")
         original.Copy clone
 
         ' 保存せずに閉じる
         Call wb.Close(SaveChanges:=False)
 
+
+        ' A4セルに部署名を記入
+        Range("A4") = department_name
+        ' F3セルに実行日を記入
+        Range("F2") = Format(Date, "yyyy/mm/dd")
+        ' C列にて空白じゃなければ左セルにVLOOKUP数式を挿入
+
+        ' E列にて
+
     Next file
+
     MsgBox "正常に完了しました．"
 
 
