@@ -5,6 +5,7 @@ Sub Furikae_Mobile()
     'お約束
     Application.ScreenUpdating = False
     Application.DisplayAlerts = False
+    Const HEADER_ROW As String = 8
 
     ' tmpフォルダに格納されているExcelの数が部署の数と一致(Loop)
     ' ./fetch_bill/tmp/${部署名}.xlsxを読む
@@ -46,7 +47,7 @@ Sub Furikae_Mobile()
         Dim original As Range
         Dim clone As Range
         Set original = ws.Range(ws.Cells(2, 1), ws.Cells(goukei_row - 1, 4))
-        Set clone = ThisWorkbook.Worksheets(department_name).Range("C8")
+        Set clone = ThisWorkbook.Worksheets(department_name).Cells(HEADER_ROW, 3)
         original.Copy clone
 
         ' 保存せずに閉じる
@@ -58,7 +59,13 @@ Sub Furikae_Mobile()
         ' F3セルに実行日を記入
         Range("F2") = Format(Date, "yyyy/mm/dd")
         ' C列にて空白じゃなければ左セルにVLOOKUP数式を挿入
-
+        ce = Cells(Rows.Count, "C").End(xlUp).Row
+        Dim i As Integer
+        For i = HEADER_ROW To ce
+            If Not Cells(i, 3) = "" Then
+                Cells(i, 2).Formula = "=VLOOKUP(" & Cells(i, 3).Address & ",PHONE_MST!A:B,2,)"
+            End If
+        Next
         ' E列にて
 
     Next file
