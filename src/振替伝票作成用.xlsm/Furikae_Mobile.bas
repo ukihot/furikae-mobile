@@ -18,6 +18,8 @@ Sub Furikae_Mobile()
     End If
 
     ' 請求月別でフォルダ作成
+    Dim tra_path
+    tra_path = ThisWorkbook.path & "\事業所別明細\" & Format(seikyu_month, "yyyymm")
     Dim objFso As Object
     Set objFso = CreateObject("Scripting.FileSystemObject")
     If Not objFso.FolderExists(tra_path) Then
@@ -153,10 +155,6 @@ continue2:
 
         hikazei_total = 0
         zeinuki_total = 0
-
-        ' 各シートを個別にブック化
-        Dim tra_path
-        tra_path = ThisWorkbook.path & "\事業所別明細\" & Format(seikyu_month, "yyyymm")
 
         Call ActiveSheet.Copy
         ActiveWorkbook.SaveAs Filename:=tra_path & "\" & department_name & "-携帯料金明細-" & Format(seikyu_month, "yyyymm") & ".xlsx"
