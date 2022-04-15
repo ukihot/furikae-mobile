@@ -127,7 +127,7 @@ Sub Furikae_Mobile()
         ' SummaryÇ…èëÇ±Ç§
 
         Dim p As Integer
-        For p = 5 To 18
+        For p = 4 To 17
             If ss.Cells(p, 1) = department_name Then
                 ss.Cells(p, tac) = zeinuki_total
                 GoTo continue1
@@ -135,7 +135,7 @@ Sub Furikae_Mobile()
         Next
 continue1:
         Dim q As Integer
-        For q = 39 To 52
+        For q = 38 To 51
             If ss.Cells(q, 1) = department_name Then
                 ss.Cells(q, tac) = hikazei_total
                 GoTo continue2
