@@ -5,7 +5,7 @@ Sub Furikae_Mobile()
     'Ç®ñÒë©
     Application.ScreenUpdating = False
     Application.DisplayAlerts = False
-    Const HEADER_ROW As String = 8
+    Const HEADER_ROW As String = 9
 
     Dim seikyu_month
     seikyu_month = DateSerial(Year(Now), Month(Now), 0)
@@ -68,6 +68,7 @@ Sub Furikae_Mobile()
         Set original = ws.Range(ws.Cells(2, 1), ws.Cells(goukei_row - 1, 4))
         Set clone = ThisWorkbook.Worksheets(department_name).Cells(HEADER_ROW, 3)
         original.Copy clone
+        ThisWorkbook.Worksheets(department_name).Range("B8", ThisWorkbook.Worksheets(department_name).Cells(goukei_row + 7, 6)).Borders.LineStyle = xlContinuous
 
         ' ï€ë∂ÇπÇ∏Ç…ï¬Ç∂ÇÈ
         Call wb.Close(SaveChanges:=False)
@@ -151,7 +152,8 @@ continue1:
         Next
 continue2:
         ' çáåvã‡äzÇèëÇ≠
-        Range("F5").Formula = "=summary!B" & p & " + summary!B" & q
+        ' Range("F5").Formula = "=summary!B" & p & " + summary!B" & q
+        Range("F5") = ss.Cells(p+17, 2) + ss.Cells(q, 2)
 
         hikazei_total = 0
         zeinuki_total = 0
