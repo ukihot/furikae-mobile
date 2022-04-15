@@ -6,12 +6,22 @@ Sub Furikae_Mobile()
     Application.ScreenUpdating = False
     Application.DisplayAlerts = False
     Const HEADER_ROW As String = 8
-    
+
+    Dim seikyu_month
+    seikyu_month = DateSerial(Year(Now), Month(Now), 0)
+
     ' 実行確認
     Dim rc As Long
-    rc = MsgBox(Format(DateSerial(Year(Now), Month(Now), 0), "yyyy/mm") & " の集計を開始しますがよろしいですか？", vbYesNo + vbQuestion)
+    rc = MsgBox(Format(seikyu_month, "yyyy/mm") & " の集計を開始しますがよろしいですか？", vbYesNo + vbQuestion)
     If rc = vbNo Then
         End
+    End If
+
+    ' 請求月別でフォルダ作成
+    Dim objFso As Object
+    Set objFso = CreateObject("Scripting.FileSystemObject")
+    If Not objFso.FolderExists(tra_path) Then
+        objFso.CreateFolder (tra_path)
     End If
 
     ' tmpフォルダに格納されているExcelの数が部署の数と一致(Loop)
@@ -60,7 +70,6 @@ Sub Furikae_Mobile()
         ' 保存せずに閉じる
         Call wb.Close(SaveChanges:=False)
 
-
         ' A4セルに部署名を記入
         Range("A4") = department_name
         ' F3セルに実行日を記入
@@ -74,13 +83,11 @@ Sub Furikae_Mobile()
             End If
         Next
         ' E列にて集計作業
-        Dim tam
-        tam = Format(DateSerial(Year(Now), Month(Now), 0), "mm")
         Dim tac
         Dim ss As Worksheet
         Set ss = ThisWorkbook.Worksheets("summary")
 
-        Select Case tam
+        Select Case Format(seikyu_month, "mm")
             Case "03"
                 tac = 2
             Case "04"
@@ -109,7 +116,6 @@ Sub Furikae_Mobile()
                 MsgBox "ちょっと待ちんさい"
                 End
         End Select
-
 
         de = Cells(Rows.Count, "D").End(xlUp).Row
         Dim j
@@ -148,11 +154,18 @@ continue2:
         hikazei_total = 0
         zeinuki_total = 0
 
+        ' 各シートを個別にブック化
+        Dim tra_path
+        tra_path = ThisWorkbook.path & "\事業所別明細\" & Format(seikyu_month, "yyyymm")
+
+        Call ActiveSheet.Copy
+        ActiveWorkbook.SaveAs Filename:=tra_path & "\" & department_name & "-携帯料金明細-" & Format(seikyu_month, "yyyymm") & ".xlsx"
+        ActiveWorkbook.Close False
+
     Next file
 
     MsgBox "正常に完了しました．"
     Worksheets(1).Activate
-
 
 End Sub
 
