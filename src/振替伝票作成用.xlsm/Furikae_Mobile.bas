@@ -136,7 +136,7 @@ Sub Furikae_Mobile()
         ' SummaryÇ…èëÇ±Ç§
 
         Dim p As Integer
-        For p = 4 To 17
+        For p = 4 To 16
             If ss.Cells(p, 1) = department_name Then
                 ss.Cells(p, tac) = zeinuki_total
                 GoTo continue1
@@ -144,7 +144,7 @@ Sub Furikae_Mobile()
         Next
 continue1:
         Dim q As Integer
-        For q = 38 To 51
+        For q = 36 To 48
             If ss.Cells(q, 1) = department_name Then
                 ss.Cells(q, tac) = hikazei_total
                 GoTo continue2
@@ -153,7 +153,7 @@ continue1:
 continue2:
         ' çáåvã‡äzÇèëÇ≠
         ' Range("F5").Formula = "=summary!B" & p & " + summary!B" & q
-        Range("F5") = ss.Cells(p+17, 2) + ss.Cells(q, 2)
+        Range("F5") = ss.Cells(p + 16, 2) + ss.Cells(q, 2)
 
         hikazei_total = 0
         zeinuki_total = 0
