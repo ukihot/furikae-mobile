@@ -153,7 +153,7 @@ continue1:
 continue2:
         ' ‡Œv‹àŠz‚ğ‘‚­
         ' Range("F5").Formula = "=summary!B" & p & " + summary!B" & q
-        Range("F5") = ss.Cells(p + 16, 2) + ss.Cells(q, 2)
+        Range("F5") = ss.Cells(p + 16, tac) + ss.Cells(q, tac)
 
         hikazei_total = 0
         zeinuki_total = 0
