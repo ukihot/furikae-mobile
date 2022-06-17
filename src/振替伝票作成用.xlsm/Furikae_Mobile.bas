@@ -126,10 +126,16 @@ Sub Furikae_Mobile()
         Dim hikazei_total As Long: hikazei_taial = 0
 
         For j = HEADER_ROW To de
+            Dim kingaku as Long : kingaku = Cells(j, 5)
+            '税区分が対象外の場合は非課税額に合計
             If Cells(j, 6) = "対象外" Then
-                hikazei_total = hikazei_total + Cells(j, 5)
+                hikazei_total = hikazei_total + kingaku
+            '小計以外は全て税抜き額に集計
             ElseIf Not Cells(j, 4) = "小計" Then
-                zeinuki_total = zeinuki_total + Cells(j, 5)
+                if Cells(j,6) = "内 税" Then
+                    kingaku = kingaku / 1.1
+                end if
+                zeinuki_total = zeinuki_total + kingaku
             End If
         Next
 
