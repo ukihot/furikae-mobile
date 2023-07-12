@@ -53,10 +53,11 @@ Sub Furikae_Mobile()
 
         ' 部署シートに部署Excelの内容を転記
         ' B列の「合計」以降は不要のため，「合計」が記載された行数を特定
-
         ' めんどいのでエラーハンドリングしない
+        ' -> 20230711:Softbankインボイス制度対応により様式変更
+        ' -> 合計=>小計
         Dim goukei_cell As Range
-        Set goukei_cell = ws.Columns("B").Find(What:="合計", LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows)
+        Set goukei_cell = ws.Columns("B").Find(What:="小計", LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows)
 
         Dim goukei_row
         goukei_row = goukei_cell.Row
@@ -126,15 +127,17 @@ Sub Furikae_Mobile()
         Dim hikazei_total As Long: hikazei_taial = 0
 
         For j = HEADER_ROW To de
-            Dim kingaku as Long : kingaku = Cells(j, 5)
+            Dim kingaku As Long: kingaku = Cells(j, 5)
             '税区分が対象外の場合は非課税額に合計
             If Cells(j, 6) = "対象外" Then
                 hikazei_total = hikazei_total + kingaku
             '小計以外は全て税抜き額に集計
-            ElseIf Not Cells(j, 4) = "小計" Then
-                if Cells(j,6) = "内 税" Then
+            ' -> 20230711:Softbankインボイス制度対応により様式変更
+            ' -> 小計=>計
+            ElseIf Not Cells(j, 4) = "計" Then
+                If Cells(j, 6) = "内 税" Then
                     kingaku = kingaku / 1.1
-                end if
+                End If
                 zeinuki_total = zeinuki_total + kingaku
             End If
         Next
@@ -158,7 +161,6 @@ continue1:
         Next
 continue2:
         ' 合計金額を書く
-        ' Range("F5").Formula = "=summary!B" & p & " + summary!B" & q
         Range("F5") = ss.Cells(p + 16, tac) + ss.Cells(q, tac)
 
         hikazei_total = 0
